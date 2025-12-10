@@ -18,7 +18,7 @@ namespace TransferManagerCE
                 // Also as the matching is done in separate threads I don't think we need the gap like they have done.
                 switch (frameIndex)
                 {
-                    case 170:
+                    case 175:
                         {
                             if (__result == TransferReason.None)
                             {
