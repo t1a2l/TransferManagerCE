@@ -26,7 +26,7 @@ namespace TransferManagerCE
                             }
                             else
                             {
-                                CDebug.LogError($"Error: FrameIndex 170 is in use {__result}, Crime2 not available.");
+                                CDebug.LogError($"Error: FrameIndex 175 is in use {__result}, Crime2 not available.");
                             }
                             break;
                         }
@@ -62,7 +62,7 @@ namespace TransferManagerCE
                             }
                             else
                             {
-                                CDebug.LogError($"Error: FrameIndex 212 is in use {__result}, IntercityBus not available.");
+                                CDebug.LogError($"Error: FrameIndex 214 is in use {__result}, IntercityBus not available.");
                             }
                             break;
                         }
