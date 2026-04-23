@@ -1,4 +1,7 @@
-﻿using ColossalFramework;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using ColossalFramework;
+using ICities;
 using SleepyCommon;
 using TransferManagerCE.UI;
 using UnityEngine;
@@ -61,40 +64,39 @@ namespace TransferManagerCE
             }
         }
 
-        public override void OnSelectBuilding(ushort buildingId)
+        public override void OnSelectBuilding(ushort parentBuildingId)
         {
+
             if (BuildingPanel.Instance.Building == 0)
             {
-                BuildingPanel.Instance.Building = buildingId;
+                BuildingPanel.Instance.Building = parentBuildingId;
                 BuildingPanel.Instance.Show();
-            }
-            else if (BuildingPanel.Instance.Building == buildingId)
-            {
-                // Toggle parent / sub buildings.
-                Building building = BuildingManager.instance.m_buildings.m_buffer[buildingId];
-
-                if (building.m_subBuilding != 0)
-                {
-                    // Select sub building
-                    BuildingPanel.Instance.Building = building.m_subBuilding;
-                    BuildingPanel.Instance.Show();
-                }
-                else if (building.m_parentBuilding != 0)
-                {
-                    // Select parent building
-                    BuildingPanel.Instance.Building = building.m_parentBuilding;
-                    BuildingPanel.Instance.Show();
-                }
-                else
-                {
-                    BuildingPanel.Instance.Building = buildingId;
-                    BuildingPanel.Instance.Show();
-                }
             }
             else
             {
-                BuildingPanel.Instance.Building = buildingId;
-                BuildingPanel.Instance.Show();
+                ushort currentBuildingId = BuildingPanel.Instance.Building;
+
+                List<ushort> buildings = BuildingUtils.GetBuildingAndNonDummySubBuildings(parentBuildingId);
+                if (buildings.Contains(currentBuildingId))
+                {
+                    // Cycle through sub buildings
+                    int index = buildings.IndexOf(currentBuildingId) + 1;
+                    if (index < buildings.Count)
+                    {
+                        BuildingPanel.Instance.Building = buildings[index];
+                        BuildingPanel.Instance.Show();
+                    }
+                    else
+                    {
+                        BuildingPanel.Instance.Building = parentBuildingId;
+                        BuildingPanel.Instance.Show();
+                    }  
+                }
+                else
+                {
+                    BuildingPanel.Instance.Building = parentBuildingId;
+                    BuildingPanel.Instance.Show();
+                }
             }
         }
 

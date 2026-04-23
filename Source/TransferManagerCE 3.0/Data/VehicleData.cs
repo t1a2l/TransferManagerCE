@@ -207,7 +207,10 @@ namespace TransferManagerCE.Data
                 if (vehicle.m_flags != 0)
                 {
                     InstanceID target = VehicleTypeHelper.GetVehicleTarget(vehicleId, vehicle);
-                    return VehicleTypeHelper.DescribeVehicleTarget(vehicleId, vehicle, target);
+                    if (target.Index != 0)
+                    {
+                        return VehicleTypeHelper.DescribeVehicleTarget(vehicleId, vehicle, target);
+                    }
                 }
             }
 

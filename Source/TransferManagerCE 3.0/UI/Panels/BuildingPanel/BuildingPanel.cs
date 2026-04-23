@@ -550,7 +550,7 @@ namespace TransferManagerCE.UI
             {
                 if (m_buildingId != 0)
                 {
-                    string sText;
+                    string sText = "";
                     if (!DependencyUtils.IsAdvancedOutsideConnectionsRunning() && IsOutsideConnection(m_buildingId))
                     {
                         m_labelPanel.isVisible = false;
@@ -571,7 +571,18 @@ namespace TransferManagerCE.UI
                         m_labelPanel.isVisible = true;
                         m_txtSource.isVisible = false;
 
-                        sText = CitiesUtils.GetBuildingName(m_buildingId, true, ModSettings.GetSettings().ShowBuildingId);
+                        // Add building / sub building count if > 1
+                        ushort parentBuildingId = BuildingUtils.GetTopLevelBuildingId(m_buildingId);
+                        List<ushort> buildings = BuildingUtils.GetBuildingAndNonDummySubBuildings(parentBuildingId);
+                        if (buildings.Count > 1)
+                        {
+                            sText = $"[{buildings.IndexOf(m_buildingId) + 1} / {buildings.Count}] | ";
+                        }
+
+                        // Add name
+                        sText += CitiesUtils.GetBuildingName(m_buildingId, true, ModSettings.GetSettings().ShowBuildingId);
+
+                        // Add districts
                         string sDetectedDistricts = CitiesUtils.GetDetectedDistricts(m_buildingId);
                         if (sDetectedDistricts.Length > 0)
                         {
