@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
+using SleepyCommon;
 using TransferManagerCE.CustomManager;
 using static RenderManager;
 using static TransferManager;
@@ -51,7 +52,6 @@ namespace TransferManagerCE
             PoliceStation,
             PoliceHelicopterDepot,
             Prison,
-            HelicopterPrison, // Prison Helicopter Mod
             Bank,
             FireStation,
             FireHelicopterDepot,
@@ -327,7 +327,7 @@ namespace TransferManagerCE
                                     return BuildingType.Childcare;
                                 case EldercareAI:
                                     return BuildingType.Eldercare;
-                                case UniqueFacultyAI:
+                                case UniqueFacultyAI when DependencyUtils.IsCombinedAISRunning():
                                     if (ai.GetType().ToString().Contains("UniversityHospitalAI"))
                                     {
                                         return BuildingType.UniversityHospital;
@@ -360,14 +360,7 @@ namespace TransferManagerCE
                                             }
                                         case ItemClass.Level.Level4:
                                             {
-                                                if (building.Info.GetAI().GetType().ToString().Contains("PrisonCopterPoliceStationAI"))
-                                                {
-                                                    return BuildingType.HelicopterPrison;
-                                                }
-                                                else
-                                                {
-                                                    return BuildingType.Prison;
-                                                }
+                                                return BuildingType.Prison;
                                             }
                                     }
                                     break;
