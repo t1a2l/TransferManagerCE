@@ -112,6 +112,9 @@ namespace TransferManagerCE
 
             CampusBuilding,
             MainCampusBuilding,
+
+            RaceBuilding,
+            RaceBuildingHQ,
         }
         
         public enum BuildingSubType
@@ -691,6 +694,14 @@ namespace TransferManagerCE
                         }
                         break;
                     }
+                case ItemClass.Service.Race:
+                    {
+                        switch (building.Info.GetAI())
+                        {
+                            case RaceStartBuildingAI: return BuildingType.RaceBuildingHQ;
+                            default: return BuildingType.RaceBuilding;
+                        }
+                    }
                 case ItemClass.Service.ServicePoint:
                     {
                         return BuildingType.ServicePoint;
@@ -1173,6 +1184,7 @@ namespace TransferManagerCE
                 case BuildingType.PumpingService:
                 case BuildingType.ServicePoint:
                 case BuildingType.AviationClub:
+                case BuildingType.RaceBuildingHQ:
                     return true;
 
                 case BuildingType.ProcessingFacility:

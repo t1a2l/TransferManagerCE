@@ -25,7 +25,12 @@ namespace TransferManagerCE.Data
                 }
             }
 
-            return m_value;
+            if (m_value is not null)
+            {
+                return m_value;
+            }
+
+            return string.Empty;
         }
     }
 }

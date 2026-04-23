@@ -991,6 +991,69 @@ namespace TransferManagerCE
             }
         }
 
+        public static List<ushort> GetBuildingAndNonDummySubBuildings(ushort buildingId)
+        {
+            List<ushort> buildings = new List<ushort>();
+            
+            buildings.Add(buildingId);
+
+            // Update sub buildings (if any)
+            Building building = BuildingManager.instance.m_buildings.m_buffer[buildingId];
+            if (building.m_flags != 0)
+            {
+                int iLoopCount = 0;
+                ushort subBuildingId = building.m_subBuilding;
+                while (subBuildingId != 0)
+                {
+                    Building subBuilding = BuildingManager.instance.m_buildings.m_buffer[subBuildingId];
+                    if (subBuilding.m_flags != 0 && subBuilding.Info != null && subBuilding.Info.GetAI() is not DummyBuildingAI)
+                    {
+                        buildings.Add(subBuildingId);
+                    }
+
+                    // Setup for next sub building
+                    subBuildingId = subBuilding.m_subBuilding;
+
+                    if (++iLoopCount > 16384)
+                    {
+                        CODebugBase<LogChannel>.Error(LogChannel.Core, "Invalid list detected!\n" + System.Environment.StackTrace);
+                        break;
+                    }
+                }
+            }
+
+            return buildings;
+        }
+
+        public static ushort GetTopLevelBuildingId(ushort buildingId)
+        {
+            int iLoopCount = 0;
+            ushort parentBuildingId = buildingId;
+
+            while (parentBuildingId != 0)
+            {
+                Building parentBuilding = BuildingManager.instance.m_buildings.m_buffer[parentBuildingId];
+
+                // Setup for next sub building
+                if (parentBuilding.m_parentBuilding == 0)
+                {
+                    return parentBuildingId;
+                }
+                else
+                {
+                    parentBuildingId = parentBuilding.m_parentBuilding;
+                }
+
+                if (++iLoopCount > 16384)
+                {
+                    CODebugBase<LogChannel>.Error(LogChannel.Core, "Invalid list detected!\n" + System.Environment.StackTrace);
+                    break;
+                }
+            }
+
+            return parentBuildingId;
+        }
+
         public static bool IsBuildingTurnedOff(ushort buildingId)
         {
             Building building = BuildingManager.instance.m_buildings.m_buffer[buildingId];

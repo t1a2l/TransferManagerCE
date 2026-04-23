@@ -462,6 +462,7 @@ namespace TransferManagerCE.TransferRules
             MainAreaBuildingRules(BuildingType.AirportMainTerminal);
             MainAreaBuildingRules(BuildingType.AirportCargoTerminal);
             MainAreaBuildingRules(BuildingType.MainIndustryBuilding);
+            MainAreaBuildingRules(BuildingType.RaceBuildingHQ);
         }
 
         private static void MainAreaBuildingRules(BuildingType eBuidlingType)

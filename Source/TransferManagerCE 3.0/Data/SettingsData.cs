@@ -95,7 +95,11 @@ namespace TransferManagerCE
             {
                 DescribeSettings();
             }
-            return m_restrictions.Value;
+            if (m_restrictions is not null)
+            {
+                return m_restrictions.Value;
+            }
+            return 0;
         }
 
         public string GetDescription()

@@ -71,7 +71,7 @@ namespace TransferManagerCE.UI
             m_btnBuildingRestrictionsClear.tooltip = Localization.Get("btnClear");
         }
 
-        public UILabel Label
+        public UILabel? Label
         {
             get
             {
@@ -79,7 +79,7 @@ namespace TransferManagerCE.UI
             }
         }
 
-        public UIToggleButton SelectButton
+        public UIToggleButton? SelectButton
         {
             get
             {
@@ -87,7 +87,7 @@ namespace TransferManagerCE.UI
             }
         }
 
-        public UIButton ClearButton
+        public UIButton? ClearButton
         {
             get
             {
