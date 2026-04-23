@@ -130,7 +130,14 @@ namespace TransferManagerCE.UI
         {
             base.Start();
             name = "BuildingPanel";
-            width = 820;
+            if(DependencyUtils.IsPrisonHelicopterRunning())
+            {
+                width = 1120;
+            }
+            else
+            {
+                width = 820;
+            }
             height = 680;
             backgroundSprite = "SubcategoriesPanel";
             if (ModSettings.GetSettings().EnablePanelTransparency)
