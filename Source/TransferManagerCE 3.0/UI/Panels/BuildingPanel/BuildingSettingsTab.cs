@@ -839,6 +839,22 @@ namespace TransferManagerCE.UI
                             }
                             break;
                         }
+                    case BuildingType.PoliceStation when DependencyUtils.IsPrisonHelicopterRunning():
+                    case BuildingType.PoliceHelicopterDepot when DependencyUtils.IsPrisonHelicopterRunning():
+                    case BuildingType.Prison when DependencyUtils.IsPrisonHelicopterRunning():
+                        {
+                            m_tabStripTransferReason.SetTabText(iTabIndex, rule.m_name);
+                            if(rule.m_id == 0)
+                            {
+                                m_tabStripTransferReason.SetTabWidth(iTabIndex, GetTabWidth(rule.m_reasons));
+                            }
+                            else
+                            {
+                                m_tabStripTransferReason.SetTabWidth(iTabIndex, 300f);
+                            }
+                            m_tabStripTransferReason.SetTabToolTip(iTabIndex, GetRestrictionReasons(rule.m_reasons));
+                            break;
+                        }
                     default:
                         {
                             m_tabStripTransferReason.SetTabText(iTabIndex, rule.m_name);
@@ -878,7 +894,22 @@ namespace TransferManagerCE.UI
 
             foreach (CustomTransferReason.Reason reason in reasons)
             {
-                sTooltip += $"\r\n- {reason}";
+                if (DependencyUtils.IsPrisonHelicopterRunning() && reason == (CustomTransferReason.Reason)223)
+                {
+                    sTooltip += $"\r\n- Moving criminals to big police stations with police van (223)";
+                }
+                else if (DependencyUtils.IsPrisonHelicopterRunning() && reason == (CustomTransferReason.Reason)224)
+                {
+                    sTooltip += $"\r\n- Pickup criminals from big police stations with helicopter (224)";
+                }
+                else if (DependencyUtils.IsPrisonHelicopterRunning() && reason == (CustomTransferReason.Reason)225)
+                {
+                    sTooltip += $"\r\n- Moving criminals to prison with helicopter (225)";
+                }
+                else
+                {
+                    sTooltip += $"\r\n- {reason}";
+                } 
             }
 
             return sTooltip;
