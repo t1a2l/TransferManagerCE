@@ -18,7 +18,7 @@ namespace TransferManagerCE
                 // Also as the matching is done in separate threads I don't think we need the gap like they have done.
                 switch (frameIndex)
                 {
-                    case 176:
+                    case 172:
                         {
                             if (__result == TransferReason.None)
                             {
@@ -26,11 +26,11 @@ namespace TransferManagerCE
                             }
                             else
                             {
-                                CDebug.LogError($"Error: FrameIndex 176 is in use {__result}, Crime2 not available.");
+                                CDebug.LogError($"Error: FrameIndex 172 is in use {__result}, Crime2 not available.");
                             }
                             break;
                         }
-                    case 180:
+                    case 174:
                         {
                             if (__result == TransferReason.None)
                             {
@@ -38,11 +38,11 @@ namespace TransferManagerCE
                             }
                             else
                             {
-                                CDebug.LogError($"Error: FrameIndex 180 is in use {__result}, TaxiMove not available.");
+                                CDebug.LogError($"Error: FrameIndex 174 is in use {__result}, TaxiMove not available.");
                             }
                             break;
                         }
-                    case 212:
+                    case 176:
                         {
                             if (__result == TransferReason.None)
                             {
@@ -50,11 +50,11 @@ namespace TransferManagerCE
                             }
                             else
                             {
-                                CDebug.LogError($"Error: FrameIndex 212 is in use {__result}, Mail2 not available.");
+                                CDebug.LogError($"Error: FrameIndex 176 is in use {__result}, Mail2 not available.");
                             }
                             break;
                         }
-                    case 214:
+                    case 178:
                         {
                             if (__result == TransferReason.None)
                             {
@@ -62,7 +62,7 @@ namespace TransferManagerCE
                             }
                             else
                             {
-                                CDebug.LogError($"Error: FrameIndex 214 is in use {__result}, IntercityBus not available.");
+                                CDebug.LogError($"Error: FrameIndex 178 is in use {__result}, IntercityBus not available.");
                             }
                             break;
                         }
