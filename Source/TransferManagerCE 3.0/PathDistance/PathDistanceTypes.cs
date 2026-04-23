@@ -1,6 +1,7 @@
 using ColossalFramework.HTTP.Paradox;
 using System;
 using System.Runtime.InteropServices.ComTypes;
+using SleepyCommon;
 using UnityEngine;
 using static RenderManager;
 using static TransferManager;
@@ -48,6 +49,9 @@ namespace TransferManagerCE.CustomManager
                 case CustomTransferReason.Reason.TaxiMove:
                 case CustomTransferReason.Reason.Cash:
                 case CustomTransferReason.Reason.CriminalMove:
+                // ---------------- Prison Helicopter Mod Reasons ----------------
+                case (CustomTransferReason.Reason)223 when DependencyUtils.IsPrisonHelicopterRunning():
+                // ---------------------------------------------------------------
                 case CustomTransferReason.Reason.RoadMaintenance:
                 case CustomTransferReason.Reason.Snow:
                     return PathDistanceAlgorithm.PathDistance;
@@ -166,6 +170,9 @@ namespace TransferManagerCE.CustomManager
                 case CustomTransferReason.Reason.Taxi:
                 case CustomTransferReason.Reason.Cash:
                 case CustomTransferReason.Reason.CriminalMove:
+                // ---------------- Prison Helicopter Mod Reasons ----------------
+                case (CustomTransferReason.Reason)223 when DependencyUtils.IsPrisonHelicopterRunning():
+                // ---------------------------------------------------------------
                 case CustomTransferReason.Reason.RoadMaintenance:
                 case CustomTransferReason.Reason.Snow:
                 case CustomTransferReason.Reason.DeadMove:
