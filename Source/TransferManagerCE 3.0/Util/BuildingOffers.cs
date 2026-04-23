@@ -22,7 +22,7 @@ namespace TransferManagerCE
             FieldInfo outgoingCountField = typeof(TransferManager).GetField("m_outgoingCount", BindingFlags.NonPublic | BindingFlags.Instance);
             FieldInfo incomingOfferField = typeof(TransferManager).GetField("m_incomingOffers", BindingFlags.Instance | BindingFlags.NonPublic);
             FieldInfo incomingCountField = typeof(TransferManager).GetField("m_incomingCount", BindingFlags.NonPublic | BindingFlags.Instance);
-           
+
             m_outgoingOffers = (TransferOffer[])outgoingOfferField.GetValue(manager);
             m_incomingOffers = (TransferOffer[])incomingOfferField.GetValue(manager);
             m_outgoingCount = (ushort[])outgoingCountField.GetValue(manager);
