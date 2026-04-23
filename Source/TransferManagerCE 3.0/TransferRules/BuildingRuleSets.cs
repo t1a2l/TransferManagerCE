@@ -227,6 +227,8 @@ namespace TransferManagerCE.TransferRules
                 {
                     List<ReasonRule> buildingRules = new List<ReasonRule>(BuildingRules[eBuildingType]);
 
+                    var buildingFlags = BuildingUtils.GetBuildingFlags(buildingId);
+
                     // Select appropriate rulesets for certain types
                     switch (eBuildingType)
                     {
@@ -266,6 +268,71 @@ namespace TransferManagerCE.TransferRules
                                     return rules;
                                 }
                                 break;
+                            }
+                        case BuildingType.PoliceHelicopterDepot when (buildingFlags & Building.Flags.Downgrading) == 0:
+                            {
+                                List<ReasonRule> rules = new List<ReasonRule>
+                                {
+                                    buildingRules[0]
+                                };
+                                return rules;
+                            }
+                        case BuildingType.PoliceStation when DependencyUtils.IsPrisonHelicopterRunning():
+                            {
+                                if ((buildingFlags & Building.Flags.Downgrading) != 0)
+                                {
+                                    // big police station
+
+                                    // offer transport of criminals from small police stations (223)
+                                    buildingRules[2].m_outgoingDistrict = false;
+                                    buildingRules[2].m_outgoingBuilding = false;
+                                    buildingRules[2].m_outgoingDistance = false;
+                                    buildingRules[2].m_incomingDistrict = true;
+                                    buildingRules[2].m_incomingBuilding = true;
+                                    buildingRules[2].m_incomingDistance = true;
+
+                                    // request pickup of criminals by helicopter to prison (224)
+                                    buildingRules[3].m_incomingDistrict = false;
+                                    buildingRules[3].m_incomingBuilding = false;
+                                    buildingRules[3].m_incomingDistance = false;
+
+                                    List<ReasonRule> rules = new List<ReasonRule>
+                                    {
+                                        buildingRules[0],
+                                        buildingRules[2],
+                                        buildingRules[1],
+                                        buildingRules[3]
+                                    };
+                                    return rules;
+                                }
+                                else
+                                {
+                                    // small police station
+
+                                    // request pickup of criminals from large police stations (223)
+                                    buildingRules[2].m_outgoingDistrict = true;
+                                    buildingRules[2].m_outgoingBuilding = true;
+                                    buildingRules[2].m_outgoingDistance = true;
+                                    buildingRules[2].m_incomingDistrict = false;
+                                    buildingRules[2].m_incomingBuilding = false;
+                                    buildingRules[2].m_incomingDistance = false;
+
+                                    List<ReasonRule> rules = new List<ReasonRule>
+                                    {
+                                        buildingRules[0],
+                                        buildingRules[1],
+                                        buildingRules[2]
+                                    };
+                                    return rules;
+                                }
+                            }
+                        case BuildingType.Prison when !DependencyUtils.IsPrisonHelicopterRunning():
+                            {
+                                List<ReasonRule> rules = new List<ReasonRule>
+                                {
+                                    buildingRules[0]
+                                };
+                                return rules;
                             }
                     }
 
@@ -644,16 +711,48 @@ namespace TransferManagerCE.TransferRules
             {
                 ReasonRule rule = new ReasonRule();
                 rule.m_id = 1;
-                rule.m_name = Localization.Get("reasonCrimeMove"); //"Moving Criminals";
+                rule.m_name = Localization.Get("reasonCrimeMove"); //"Moving criminals from police stations to prison";
                 rule.AddReason(CustomTransferReason.Reason.CriminalMove);
-                rule.m_incomingDistrict = true;
                 rule.m_outgoingDistrict = true;
-                rule.m_incomingBuilding = true;
                 rule.m_outgoingBuilding = true;
-                rule.m_incomingDistance = true;
                 rule.m_outgoingDistance = true;
                 list.Add(rule);
             }
+
+            if(DependencyUtils.IsPrisonHelicopterRunning())
+            {
+                // PoliceVanCriminalMove
+                {
+                    ReasonRule rule = new ReasonRule();
+                    rule.m_id = 2;
+                    rule.m_name = Localization.Get("reasonPoliceVanCriminalMove"); //"Moving criminals to big police stations";
+                    rule.AddReason((CustomTransferReason.Reason)223);
+                    rule.m_incomingDistrict = true;
+                    rule.m_outgoingDistrict = true;
+                    rule.m_incomingBuilding = true;
+                    rule.m_outgoingBuilding = true;
+                    rule.m_incomingDistance = true;
+                    rule.m_outgoingDistance = true;
+                    list.Add(rule);
+                }
+
+                // PrisonHelicopterCriminalPickup
+                {
+                    ReasonRule rule = new ReasonRule();
+                    rule.m_id = 3;
+                    rule.m_name = Localization.Get("reasonPrisonHelicopterCriminalPickup"); //"Pickup criminals from big police stations";
+                    rule.AddReason((CustomTransferReason.Reason)224);
+                    rule.m_incomingDistrict = true;
+                    rule.m_outgoingDistrict = true;
+                    rule.m_incomingBuilding = true;
+                    rule.m_outgoingBuilding = true;
+                    rule.m_incomingDistance = true;
+                    rule.m_outgoingDistance = true;
+                    list.Add(rule);
+                }
+
+            }
+
 
             BuildingRules[BuildingType.PoliceStation] = list;
         }
@@ -673,20 +772,21 @@ namespace TransferManagerCE.TransferRules
                 list.Add(rule);
             }
 
-            // CrimeMove
+            if (DependencyUtils.IsPrisonHelicopterRunning())
             {
-                ReasonRule rule = new ReasonRule();
-                rule.m_id = 1;
-                rule.m_name = Localization.Get("reasonCrimeMove"); //"Moving Criminals";
-                rule.AddReason(CustomTransferReason.Reason.CriminalMove);
-                rule.m_incomingDistrict = true;
-                rule.m_outgoingDistrict = true;
-                rule.m_incomingBuilding = true;
-                rule.m_outgoingBuilding = true;
-                rule.m_incomingDistance = true;
-                rule.m_outgoingDistance = true;
-                list.Add(rule);
+                // PrisonHelicopterCriminalPickup
+                {
+                    ReasonRule rule = new ReasonRule();
+                    rule.m_id = 1;
+                    rule.m_name = Localization.Get("reasonPrisonHelicopterCriminalPickup"); //"Pickup criminals from big police stations";
+                    rule.AddReason((CustomTransferReason.Reason)224);
+                    rule.m_incomingDistrict = true;
+                    rule.m_incomingBuilding = true;
+                    rule.m_incomingDistance = true;
+                    list.Add(rule);
+                }
             }
+            
 
             BuildingRules[BuildingType.PoliceHelicopterDepot] = list;
         }
@@ -698,12 +798,27 @@ namespace TransferManagerCE.TransferRules
             {
                 ReasonRule rule = new ReasonRule();
                 rule.m_id = 0;
-                rule.m_name = Localization.Get("reasonCrimeMove"); //"Moving Criminals";
+                rule.m_name = Localization.Get("reasonCrimeMove"); //"CrimeMove";
                 rule.AddReason(CustomTransferReason.Reason.CriminalMove);
                 rule.m_incomingDistrict = true;
                 rule.m_incomingBuilding = true;
                 rule.m_incomingDistance = true;
                 list.Add(rule);
+            }
+
+            if (DependencyUtils.IsPrisonHelicopterRunning())
+            {
+                // PrisonHelicopterCriminalMove
+                {
+                    ReasonRule rule = new ReasonRule();
+                    rule.m_id = 1;
+                    rule.m_name = Localization.Get("reasonPrisonHelicopterCriminalMove"); //"Moving criminals to prison";
+                    rule.AddReason((CustomTransferReason.Reason)225);
+                    rule.m_outgoingDistrict = true;
+                    rule.m_outgoingBuilding = true;
+                    rule.m_outgoingDistance = true;
+                    list.Add(rule);
+                }
             }
 
             BuildingRules[BuildingType.Prison] = list;
