@@ -25,9 +25,7 @@ namespace TransferManagerCE.Data
                 {
                     case BuildingType.Prison:
                     case BuildingType.PoliceStation:
-                    case BuildingType.HelicopterPrison:
                         {
-                            // Prison Helicopter Mod
                             tooltip = "# of criminals";
                             return BuildingUtils.GetCriminalsAtPoliceStation(m_buildingId, building).ToString();
                         }
