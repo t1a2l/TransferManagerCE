@@ -40,7 +40,7 @@ namespace TransferManagerCE.UI
             return panel;
         }
 
-        public UIMyDropDown DropDown
+        public UIMyDropDown? DropDown
         {
             get
             {
@@ -48,7 +48,7 @@ namespace TransferManagerCE.UI
             }
         }
 
-        public UIToggleButton SelectDistrict
+        public UIToggleButton? SelectDistrict
         {
             get
             {
@@ -56,7 +56,7 @@ namespace TransferManagerCE.UI
             }
         }
 
-        public UIButton Clear
+        public UIButton? Clear
         {
             get
             {

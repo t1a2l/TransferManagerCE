@@ -34,7 +34,7 @@ namespace TransferManagerCE
         private bool m_processedClick = false;
 
         // ----------------------------------------------------------------------------------------
-        public static SelectionTool Instance
+        public static SelectionTool? Instance
         {
             get
             {

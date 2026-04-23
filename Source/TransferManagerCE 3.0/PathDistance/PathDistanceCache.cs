@@ -9,7 +9,7 @@ namespace TransferManagerCE
         private static NodeLinkGraph s_otherServicesNodeLoader = null;
 
         // ----------------------------------------------------------------------------------------
-        public static NodeLinkGraph GetLoader(NetworkMode mode, bool bCheckValid)
+        public static NodeLinkGraph? GetLoader(NetworkMode mode, bool bCheckValid)
         {
             switch (mode)
             {

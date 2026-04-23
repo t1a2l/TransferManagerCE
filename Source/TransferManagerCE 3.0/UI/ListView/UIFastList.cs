@@ -290,11 +290,14 @@ namespace TransferManagerCE.UI
             }
         }
 
-        public object selectedItem
+        public object? selectedItem
         {
             get
             {
-                if (m_selectedDataId == -1) return null;
+                if (m_selectedDataId == -1)
+                {
+                    return null;
+                }
                 return m_rowsData.m_buffer[m_selectedDataId];
             }
         }
