@@ -996,6 +996,12 @@ namespace TransferManagerCE
             Building building = BuildingManager.instance.m_buildings.m_buffer[buildingId];
             return (building.m_problems & Notification.Problem1.TurnedOff).IsNotNone;
         }
+
+        public static Building.Flags GetBuildingFlags(ushort buildingId)
+        {
+            Building building = BuildingManager.instance.m_buildings.m_buffer[buildingId];
+            return building.m_flags;
+        }
     }
 }
 
