@@ -182,10 +182,19 @@ namespace TransferManagerCE
                     }
                 case BuildingType.PoliceHelicopterDepot:
                     {
+                        if (DependencyUtils.IsPrisonHelicopterRunning() && (building.m_flags & Building.Flags.Downgrading) != 0 && iType == 1)
+                        {
+                            return GetVehicleCount((TransferReason)224, buildingId, building, iType);
+                        }
                         return GetVehicleCount((TransferReason)CustomTransferReason.Reason.Crime2, buildingId, building, iType);
+
                     }
                 case BuildingType.PoliceStation:
                     {
+                        if (DependencyUtils.IsPrisonHelicopterRunning() && (building.m_flags & Building.Flags.Downgrading) != 0 && iType == 1)
+                        {
+                            return GetVehicleCount((TransferReason)223, buildingId, building, iType);
+                        }
                         return GetVehicleCount(TransferReason.Crime, buildingId, building, iType);
                     }
                 case BuildingType.Cemetery:
@@ -265,16 +274,47 @@ namespace TransferManagerCE
                 case BuildingType.Prison:
                 case BuildingType.PoliceStation:
                     {
-                        if (iVehicleType == 0)
+                        if (!DependencyUtils.IsPrisonHelicopterRunning())
                         {
-                            PoliceStationAI? buildingAI = building.Info.m_buildingAI as PoliceStationAI;
-                            if (buildingAI is not null)
+                            if(iVehicleType == 0)
+                            {
+                                PoliceStationAI? buildingAI = building.Info.m_buildingAI as PoliceStationAI;
+                                if (buildingAI is not null)
+                                {
+                                    int budget = Singleton<EconomyManager>.instance.GetBudget(building.Info.m_class);
+                                    int productionRate = PlayerBuildingAI.GetProductionRate(100, budget);
+                                    return (productionRate * buildingAI.PoliceCarCount + 99) / 100;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (building.Info is not null && building.Info.m_buildingAI != null && building.Info.m_buildingAI.GetType().Name.Equals("PrisonCopterPoliceStationAI"))
                             {
                                 int budget = Singleton<EconomyManager>.instance.GetBudget(building.Info.m_class);
                                 int productionRate = PlayerBuildingAI.GetProductionRate(100, budget);
-                                return (productionRate * buildingAI.PoliceCarCount + 99) / 100;
+                                if (iVehicleType == 0 && building.m_flags != 0)
+                                {
+                                    var type = building.Info.m_buildingAI.GetType();
+                                    var field = type.GetField("PoliceCarCount", BindingFlags.Public | BindingFlags.Instance);
+                                    object PoliceCarCount = field?.GetValue(building.Info.m_buildingAI);
+                                    if (PoliceCarCount != null)
+                                    {
+                                        return (productionRate * (int)PoliceCarCount + 99) / 100;
+                                    }
+                                }
+                                else if (iVehicleType == 1 && building.m_flags != 0 && (building.m_flags & Building.Flags.Downgrading) != 0)
+                                {
+                                    var type = building.Info.m_buildingAI.GetType();
+                                    var field = type.GetField("PoliceVanCount", BindingFlags.Public | BindingFlags.Instance);
+                                    object PoliceVanCount = field?.GetValue(building.Info.m_buildingAI);
+                                    if (PoliceVanCount != null)
+                                    {
+                                        return (productionRate * (int)PoliceVanCount + 99) / 100;
+                                    }
+                                }
                             }
-                        }
+                        } 
                         break;
                     }
                 case BuildingType.Bank:
@@ -462,7 +502,6 @@ namespace TransferManagerCE
                         }
                         break;
                     }
-                case BuildingType.PoliceHelicopterDepot:
                 case BuildingType.MedicalHelicopterDepot:
                 case BuildingType.FireHelicopterDepot:
                     {
@@ -474,6 +513,53 @@ namespace TransferManagerCE
                                 int budget = Singleton<EconomyManager>.instance.GetBudget(building.Info.m_class);
                                 int productionRate = PlayerBuildingAI.GetProductionRate(100, budget);
                                 return (productionRate * buildingAI.m_helicopterCount + 99) / 100;
+                            }
+                        }
+                        break;
+                    }
+                case BuildingType.PoliceHelicopterDepot:
+                    {
+                        if (!DependencyUtils.IsPrisonHelicopterRunning())
+                        {
+                            if (iVehicleType == 0 && building.m_flags != 0 && building.Info is not null)
+                            {
+                                HelicopterDepotAI? buildingAI = building.Info.m_buildingAI as HelicopterDepotAI;
+                                if (buildingAI is not null && buildingAI.m_helicopterCount < 16384)
+                                {
+                                    int budget = Singleton<EconomyManager>.instance.GetBudget(building.Info.m_class);
+                                    int productionRate = PlayerBuildingAI.GetProductionRate(100, budget);
+                                    return (productionRate * buildingAI.m_helicopterCount + 99) / 100;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (building.Info is not null && building.Info.m_buildingAI != null && building.Info.m_buildingAI.GetType().Name.Equals("PoliceHelicopterDepotAI"))
+                            {
+                                if (iVehicleType == 0 && building.m_flags != 0)
+                                {
+                                    var type = building.Info.m_buildingAI.GetType();
+                                    var field = type.GetField("m_policeHelicopterCount", BindingFlags.Public | BindingFlags.Instance);
+                                    object m_policeHelicopterCount = field?.GetValue(building.Info.m_buildingAI);
+                                    if (m_policeHelicopterCount != null)
+                                    {
+                                        int budget = Singleton<EconomyManager>.instance.GetBudget(building.Info.m_class);
+                                        int productionRate = PlayerBuildingAI.GetProductionRate(100, budget);
+                                        return (productionRate * (int)m_policeHelicopterCount + 99) / 100;
+                                    }
+                                }
+                                else if (iVehicleType == 1 && building.m_flags != 0  && (building.m_flags & Building.Flags.Downgrading) != 0)
+                                {
+                                    var type = building.Info.m_buildingAI.GetType();
+                                    var field = type.GetField("m_prisonHelicopterCount", BindingFlags.Public | BindingFlags.Instance);
+                                    object m_prisonHelicopterCount = field?.GetValue(building.Info.m_buildingAI);
+                                    if (m_prisonHelicopterCount != null)
+                                    {
+                                        int budget = Singleton<EconomyManager>.instance.GetBudget(building.Info.m_class);
+                                        int productionRate = PlayerBuildingAI.GetProductionRate(100, budget);
+                                        return (productionRate * (int)m_prisonHelicopterCount + 99) / 100;
+                                    }
+                                }
                             }
                         }
                         break;
