@@ -68,6 +68,11 @@ namespace TransferManagerCE.CustomManager
                 case CustomTransferReason.Reason.Dead:           // Matches bodies to cemeteries
                 case CustomTransferReason.Reason.Crime:          // Matches crime to police stations
                 case CustomTransferReason.Reason.CriminalMove:   // Match Police station with closest prison
+                // ---------------- Prison Helicopter Mod Reasons ----------------
+                case (CustomTransferReason.Reason)223 when DependencyUtils.IsPrisonHelicopterRunning():           // Match Big Police station with closest small Police station (Modded Reason)
+                case (CustomTransferReason.Reason)224 when DependencyUtils.IsPrisonHelicopterRunning():           // Match Big Police station with closest helicopter depot (Modded Reason)
+                case (CustomTransferReason.Reason)225 when DependencyUtils.IsPrisonHelicopterRunning():           // Match Big Police station with closest prison (Modded Reason)
+                // ---------------------------------------------------------------
                 case CustomTransferReason.Reason.Cash:           // New Financial District service
                 case CustomTransferReason.Reason.Collapsed:      // Matches building to nearby service depot.
                 case CustomTransferReason.Reason.Fire:           // We always want the closest fire station to respond
@@ -195,6 +200,10 @@ namespace TransferManagerCE.CustomManager
                 // Need to scale the *Move functions by priority as well
                 // so that we match Cemeteries with Crematoriums and Landfill with Recycling plants
                 case CustomTransferReason.Reason.CriminalMove:
+                // ---------------- Prison Helicopter Mod Reasons ----------------
+                case (CustomTransferReason.Reason)223 when DependencyUtils.IsPrisonHelicopterRunning():
+                case (CustomTransferReason.Reason)225 when DependencyUtils.IsPrisonHelicopterRunning():
+                // ---------------------------------------------------------------
                 case CustomTransferReason.Reason.DeadMove:
                 case CustomTransferReason.Reason.GarbageMove:
                 case CustomTransferReason.Reason.GarbageTransfer:
@@ -347,6 +356,12 @@ namespace TransferManagerCE.CustomManager
                 case CustomTransferReason.Reason.GarbageTransfer:
                 case CustomTransferReason.Reason.Crime:
                 case CustomTransferReason.Reason.CriminalMove:
+
+                // ---------------- Prison Helicopter Mod Reasons ----------------
+                case (CustomTransferReason.Reason)223 when DependencyUtils.IsPrisonHelicopterRunning():
+                case (CustomTransferReason.Reason)224 when DependencyUtils.IsPrisonHelicopterRunning():
+                case (CustomTransferReason.Reason)225 when DependencyUtils.IsPrisonHelicopterRunning():
+                // ---------------------------------------------------------------
                 case CustomTransferReason.Reason.Cash:
                 case CustomTransferReason.Reason.Fire:
                 case CustomTransferReason.Reason.Fire2:
@@ -451,6 +466,11 @@ namespace TransferManagerCE.CustomManager
                 case CustomTransferReason.Reason.Dead:
                 case CustomTransferReason.Reason.Crime:
                 case CustomTransferReason.Reason.CriminalMove:
+                // ---------------- Prison Helicopter Mod Reasons ----------------
+                case (CustomTransferReason.Reason)223 when DependencyUtils.IsPrisonHelicopterRunning():
+                case (CustomTransferReason.Reason)224 when DependencyUtils.IsPrisonHelicopterRunning():
+                case (CustomTransferReason.Reason)225 when DependencyUtils.IsPrisonHelicopterRunning():
+                // ---------------------------------------------------------------
                 case CustomTransferReason.Reason.Cash:
                 case CustomTransferReason.Reason.Collapsed:
                 case CustomTransferReason.Reason.Fire:
@@ -475,6 +495,10 @@ namespace TransferManagerCE.CustomManager
                 case CustomTransferReason.Reason.Fire2:
                 case CustomTransferReason.Reason.ForestFire:
                 case CustomTransferReason.Reason.Crime2:
+                // ---------------- Prison Helicopter Mod Reasons ----------------
+                case (CustomTransferReason.Reason)224 when DependencyUtils.IsPrisonHelicopterRunning():
+                case (CustomTransferReason.Reason)225 when DependencyUtils.IsPrisonHelicopterRunning():
+                    // ---------------------------------------------------------------
                     return true;
             }
 
